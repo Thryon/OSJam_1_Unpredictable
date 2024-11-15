@@ -396,6 +396,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5b10361433b5a541b9ddddda816b205, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _bannerRoundInfo: {fileID: 4715456520052978055}
 --- !u!1001 &5351855787040380101
 PrefabInstance:
   m_ObjectHideFlags: 0
