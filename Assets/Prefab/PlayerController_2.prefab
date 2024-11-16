@@ -62,6 +62,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1233658817837782343, guid: a0a07e753d1e07d48859d10eea36883a, type: 3}
   m_PrefabInstance: {fileID: 1787966340799071746}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &5209951196547625215 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5808894664026666749, guid: a0a07e753d1e07d48859d10eea36883a, type: 3}
+  m_PrefabInstance: {fileID: 1787966340799071746}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7941980018218536242
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -74,6 +79,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerController_2
       objectReference: {fileID: 0}
+    - target: {fileID: 3158988496708173564, guid: df0fa6b43e7d00b4e806891855b9084b, type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 5209951196547625215}
     - target: {fileID: 3158988496708173564, guid: df0fa6b43e7d00b4e806891855b9084b, type: 3}
       propertyPath: playerID
       value: 1

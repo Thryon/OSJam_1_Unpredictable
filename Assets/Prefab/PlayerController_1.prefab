@@ -46,6 +46,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerID: 0
+  shootFX: {fileID: 0}
+  animator: {fileID: 8638633915969953392}
 --- !u!1 &5490209345665930884
 GameObject:
   m_ObjectHideFlags: 0
@@ -138,5 +140,10 @@ PrefabInstance:
 --- !u!4 &3918438464852377034 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7288369061704715152, guid: f7433e27cc08bd945ba2c43e31a4245c, type: 3}
+  m_PrefabInstance: {fileID: 6000037212750345818}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &8638633915969953392 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 2641077270208063530, guid: f7433e27cc08bd945ba2c43e31a4245c, type: 3}
   m_PrefabInstance: {fileID: 6000037212750345818}
   m_PrefabAsset: {fileID: 0}

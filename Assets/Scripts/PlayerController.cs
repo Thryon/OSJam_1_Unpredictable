@@ -8,9 +8,13 @@ public class PlayerController : MonoBehaviour
     public PlayerPawn pawn;
     public ShootFX shootFX;
 
+    public Animator animator;
+
     public void MoveTo(Vector3 transformPosition, float f)
     {
+        transform.LookAt(transformPosition);
         transform.DOMove(transformPosition , 0.5f);
+        animator.SetTrigger("Walk");
     }
 
     public void TeleportTo(Vector3 position)
@@ -26,5 +30,6 @@ public class PlayerController : MonoBehaviour
         shootFX.SetFromPoint(from);
         shootFX.SetToPoint(to);
         shootFX.Play(duration);
+        animator.SetTrigger("Shoot");
     }
 }

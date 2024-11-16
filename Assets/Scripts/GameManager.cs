@@ -108,6 +108,7 @@ public class GameManager : MonoBehaviour
         else if (to == EGamePhase.Play)
         {
             StartCoroutine(PlayCoroutine());
+            GlobalEvents.OnPlayPhaseStarted.Invoke();
         }
         else if (to == EGamePhase.Win)
         {
@@ -246,7 +247,7 @@ public class GameManager : MonoBehaviour
             IngameCell player2cell = GridManager.Instance.IngameGrid.GetCellAtPos(player2.pawn.position);
             player2.MoveTo(player2cell.transform.position , 0.5f);
             
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(.5f);
             if(result.IsEndingResult())
             {
                 EndPlay(result);
