@@ -861,7 +861,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56d14402093b24e4590c287140312922, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerID: 0
+  playerID: 1
   roundImages:
   - {fileID: 5034831898097630302}
   - {fileID: 1209327450405935868}
