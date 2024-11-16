@@ -52,4 +52,9 @@ public class PlayerController : MonoBehaviour
     {
         animator.SetTrigger("Death");
     }
+
+    public void Reset()
+    {
+        animator.Rebind();
+    }
 }

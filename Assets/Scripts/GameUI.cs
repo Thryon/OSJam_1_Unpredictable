@@ -3,30 +3,47 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class GameUI : MonoBehaviour
 {
     [SerializeField] private GameObject _bannerRoundInfo;
     [SerializeField] private GameObject _tutorialInfo;
-    [SerializeField] private WinScreen _winScreen;
+    [FormerlySerializedAs("_winScreen")] [SerializeField] private WinScreen gameWinScreen;
+    [SerializeField] private WinScreen roundWinScreen;
     [SerializeField] private TextMeshProUGUI _textTimer;
 
     private GameManager _gameManager;
     private void Awake()
     {
-        GlobalEvents.OnWin.AddListener(OnWin);
+        GlobalEvents.OnGameWin.AddListener(OnWin);
+        GlobalEvents.OnRoundWin.AddListener(OnRoundWin);
+        GlobalEvents.ResetForNewRound.AddListener(ResetForNewRound);
     }
 
     private void OnDestroy()
     {
-        GlobalEvents.OnWin.RemoveListener(OnWin);
+        GlobalEvents.OnGameWin.RemoveListener(OnWin);
+        GlobalEvents.OnRoundWin.RemoveListener(OnRoundWin);
+        GlobalEvents.ResetForNewRound.RemoveListener(ResetForNewRound);
+    }
+
+    private void ResetForNewRound()
+    {
+        roundWinScreen.gameObject.SetActive(false);
+    }
+
+    private void OnRoundWin()
+    {
+        roundWinScreen.gameObject.SetActive(true);
+        roundWinScreen.Setup(GameManager.Instance.LastPlayPhaseResult);
     }
 
     private void OnWin()
     {
-        _winScreen.gameObject.SetActive(true);
-        _winScreen.Setup(GameManager.Instance.LastPlayPhaseResult);
+        gameWinScreen.gameObject.SetActive(true);
+        gameWinScreen.Setup(GameManager.Instance.EndResult);
     }
 
     public void ReloadGame()
@@ -55,7 +72,9 @@ public class GameUI : MonoBehaviour
     public void Start()
     {
         GlobalEvents.OnInputBuffered.AddListener(DisableTutorialText);
-        _winScreen.gameObject.SetActive(false);
+        gameWinScreen.gameObject.SetActive(false);
+        roundWinScreen.gameObject.SetActive(false);
+        
         _bannerRoundInfo.transform.localScale = Vector3.zero;
         _gameManager = GameManager.Instance;
         GlobalEvents.OnBufferPhaseDone.AddListener(HideTimer);

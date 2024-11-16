@@ -10,7 +10,9 @@ public static class GlobalEvents
     public static UnityEvent OnBufferPhaseDone = new ();
     public static UnityEvent OnPlayPhaseStarted = new ();
     public static UnityEvent<GameManager.EPlayPhaseResult> OnPlayPhaseDone = new ();
-    public static UnityEvent OnWin = new ();
+    public static UnityEvent OnRoundWin = new ();
+    public static UnityEvent OnGameWin = new ();
+    public static UnityEvent ResetForNewRound = new ();
 
     public struct Movement
     {
