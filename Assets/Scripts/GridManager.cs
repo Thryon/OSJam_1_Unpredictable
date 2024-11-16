@@ -126,12 +126,18 @@ public class GridManager : MonoBehaviour
         public Cell cell;
         public Vector2Int hitPosition;
         public Vector2Int shootDirection;
-        public bool HitNothing => !hitPlayer && !hitCellContent && !hitWall; 
+        public Vector2Int shootStartPos;
+        public bool hitNothing => !hitPlayer && !hitCellContent && !hitWall;
+
+        public bool HasHitPlayer(int playerID)
+        {
+            return hitPlayer && playerHitID == playerID;
+        }
     }
     
     public ShootResult ShootInDirection(int playerID, Vector2Int startPos, Vector2Int direction)
     {
-        ShootResult result = new ShootResult() {shootDirection = direction};
+        ShootResult result = new ShootResult() {shootDirection = direction, shootStartPos = startPos};
         bool found = false;
         Vector2Int targetPos = startPos;
         while (!found)

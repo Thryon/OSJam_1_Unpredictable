@@ -14,7 +14,9 @@ public class IngameGrid : MonoBehaviour
     [SerializeField] private float cellsDistance = 1f;
     [SerializeField] private IngameCell _ingameCellPrefab;
     [SerializeField] private bool _regenerateGrid;
-    
+    [FormerlySerializedAs("_pairGroundMat")] [SerializeField] private Material _evenGroundMat;
+    [SerializeField] private Material _oddGroundMat;
+    [SerializeField] private bool _applyMats;
     public List<IngameCell> cells = new List<IngameCell>();
     public Vector2Int Size => gridSize;
     public Vector2Int Player1SpawnPosition => player1SpawnPosition;
@@ -30,6 +32,17 @@ public class IngameGrid : MonoBehaviour
                 _regenerateGrid = false;
                 EditorUtility.SetDirty(this);
                 GenerateGrid();
+            }
+            if (_applyMats)
+            {
+                _applyMats = false;
+                foreach (var cell in cells)
+                {
+                    cell.ApplyMaterial((((cell.PositionInGrid.x + cell.PositionInGrid.y) % 2) == 0)
+                        ? _evenGroundMat
+                        : _oddGroundMat);
+                }
+                EditorUtility.SetDirty(this);
             }
         }
         #endif
@@ -54,7 +67,9 @@ public class IngameGrid : MonoBehaviour
             return;
         }
         ClearGrid();
+#if UNITY_EDITOR
         Undo.RecordObject(this, "Generate Grid");
+#endif
         for (int y = 0; y < gridSize.y; y++)
         {
             for (int x = 0; x < gridSize.x; x++)
@@ -81,7 +96,10 @@ public class IngameGrid : MonoBehaviour
         cell.transform.localPosition = new Vector3(x * cellsDistance, 0f, y * cellsDistance);
         cell.SetPositionInGrid(x, y);
         cell.name = "Cell_" + x + "_" + y;
-        Undo.RegisterCreatedObjectUndo(cell.gameObject, "Generate Grid");
+        #if UNITY_EDITOR
+            Undo.RegisterCreatedObjectUndo(cell.gameObject, "Generate Grid");
+            EditorUtility.SetDirty(cell);
+        #endif
         return cell;
     }
 }

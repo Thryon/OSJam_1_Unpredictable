@@ -7,6 +7,8 @@ public class PlayerController : MonoBehaviour
     public int playerID = 0;
     public PlayerPawn pawn;
     public ShootFX shootFX;
+    public float shootDuration = 0.5f;
+    public float deathDuration = 0.5f;
 
     public Animator animator;
 
@@ -22,16 +24,31 @@ public class PlayerController : MonoBehaviour
         transform.position = position;
     }
 
-    public void Shoot(GlobalEvents.Shot shot, float duration)
+    public void Shoot(GridManager.ShootResult shot)
     {
         shootFX.gameObject.SetActive(true);
-        var from = GridManager.Instance.GetCellWorldPosition(shot.from);
-        var to = GridManager.Instance.GetCellWorldPosition(shot.to);
+        var from = GridManager.Instance.GetCellWorldPosition(shot.shootStartPos);
+        var to = GridManager.Instance.GetCellWorldPosition(shot.hitPosition);
         shootFX.SetFromPoint(from);
         shootFX.SetToPoint(to);
         Vector3 dir = from - to;
         transform.LookAt(transform.position + dir);
-        shootFX.Play(duration);
         animator.SetTrigger("Shoot");
+        shootFX.Play(shootDuration);
+    }
+
+    public float GetShootDuration()
+    {
+        return shootDuration;
+    }
+
+    public float GetDeathDuration()
+    {
+        return deathDuration;
+    }
+
+    public void Kill()
+    {
+        
     }
 }
