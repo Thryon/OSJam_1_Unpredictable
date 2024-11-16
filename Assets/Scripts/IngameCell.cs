@@ -17,8 +17,7 @@ public class IngameCell : MonoBehaviour
     public GameObject GroundModel;
     public GameObject WallModel;
     [FormerlySerializedAs("renderer")] public MeshRenderer groundRenderer;
-    
-    Vector2Int positionInGrid;
+    [SerializeField] Vector2Int positionInGrid;
     public Vector2Int PositionInGrid => positionInGrid;
     [SerializeField] bool __refreshVisuals;
 

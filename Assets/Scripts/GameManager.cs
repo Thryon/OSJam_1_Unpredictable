@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
             {
                 GameObject go = new GameObject("GameManager");
                 instance = go.AddComponent<GameManager>();
-                DontDestroyOnLoad(go);
+                // DontDestroyOnLoad(go);
             }
             return instance;
         }
@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void GoToPhase(EGamePhase to, EGamePhase from)
+    public void GoToPhase(EGamePhase to, EGamePhase from)
     {
         phaseTimer = 0f;
         currentGamePhase = to;
@@ -125,8 +125,8 @@ public class GameManager : MonoBehaviour
     }
     public class GameLoopIteration
     {
-        public List<EAction> player1Actions;
-        public List<EAction> player2Actions;
+        public List<EAction> player1Actions = new();
+        public List<EAction> player2Actions = new();
         public GridManager.ShootResult Player1ShootResult;
         public GridManager.ShootResult Player2ShootResult;
         public EPlayPhaseResult playPhaseResult;
@@ -157,11 +157,13 @@ public class GameManager : MonoBehaviour
         if (player1Input.IsMovementInput())
         {
             GridManager.Instance.MovePlayer(player1Pawn, player1Dir);
+            result.player1Actions.Add(EAction.Move);
         }
 
         if (player2Input.IsMovementInput())
         {
             GridManager.Instance.MovePlayer(player2Pawn, player2Dir);
+            result.player2Actions.Add(EAction.Move);
         }
 
         if (player1Input.IsShootInput())
@@ -290,7 +292,7 @@ public class GameManager : MonoBehaviour
             bool player1Killed = false;
             bool player2Killed = false;
             float shootDuration = 0f;
-            if (result.player1Actions.Contains(EAction.Shoot))
+            if (result.player1Actions.Contains(EAction.Shoot) && result.Player1ShootResult != null)
             {
                 hasAnyShots = true;
                 shootDuration = player1.GetShootDuration();
@@ -308,7 +310,7 @@ public class GameManager : MonoBehaviour
                 player1.Shoot(result.Player1ShootResult);
             }
 
-            if (result.player2Actions.Contains(EAction.Shoot))
+            if (result.player2Actions.Contains(EAction.Shoot) && result.Player2ShootResult != null)
             {
                 hasAnyShots = true;
                 float duration = player2.GetShootDuration();

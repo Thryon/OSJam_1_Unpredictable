@@ -12,7 +12,7 @@ public class GridManager : MonoBehaviour
             {
                 GameObject go = new GameObject("GridManager");
                 instance = go.AddComponent<GridManager>();
-                DontDestroyOnLoad(go);
+                // DontDestroyOnLoad(go);
             }
             return instance;
         }

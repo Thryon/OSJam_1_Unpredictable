@@ -17,6 +17,7 @@ public class IngameGrid : MonoBehaviour
     [FormerlySerializedAs("_pairGroundMat")] [SerializeField] private Material _evenGroundMat;
     [SerializeField] private Material _oddGroundMat;
     [SerializeField] private bool _applyMats;
+    [SerializeField] private bool _reaffectCellPositions;
     public List<IngameCell> cells = new List<IngameCell>();
     public Vector2Int Size => gridSize;
     public Vector2Int Player1SpawnPosition => player1SpawnPosition;
@@ -43,6 +44,20 @@ public class IngameGrid : MonoBehaviour
                         : _oddGroundMat);
                 }
                 EditorUtility.SetDirty(this);
+            }
+
+            if (_reaffectCellPositions)
+            {
+                _reaffectCellPositions = false;
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    for (int x = 0; x < gridSize.x; x++)
+                    {
+                        var cell = cells[x + (y * gridSize.x)];
+                        cell.SetPositionInGrid(x, y);
+                        EditorUtility.SetDirty(cell);
+                    }
+                } 
             }
         }
         #endif
