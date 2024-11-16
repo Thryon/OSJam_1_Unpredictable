@@ -45,6 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridSize: {x: 10, y: 10}
+  player1SpawnPosition: {x: 0, y: 0}
+  player2SpawnPosition: {x: 9, y: 9}
   cellsDistance: 1
   _ingameCellPrefab: {fileID: 8126596604952566608, guid: f0a0cafb5f9e6204fb4dce9aaaa379aa, type: 3}
   _regenerateGrid: 0
