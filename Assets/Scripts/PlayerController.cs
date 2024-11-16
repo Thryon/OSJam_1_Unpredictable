@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     public void MoveTo(Vector3 transformPosition, float f)
     {
         transform.LookAt(transformPosition);
-        transform.DOMove(transformPosition , 0.5f);
+        transform.DOMove(transformPosition , 0.5f).SetEase(Ease.Linear);
         animator.SetTrigger("Walk");
     }
 
@@ -49,6 +49,6 @@ public class PlayerController : MonoBehaviour
 
     public void Kill()
     {
-        animator.SetTrigger("death");
+        animator.SetTrigger("Death");
     }
 }
