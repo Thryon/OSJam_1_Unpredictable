@@ -98,7 +98,7 @@ public class GameManager : MonoBehaviour
             break;
             case EGamePhase.WinRound:
             {
-                if (phaseTimer >= bufferPhaseDuration)
+                if (phaseTimer >= roundWinPhaseDuration)
                 {
                     GoToPhase(EGamePhase.BufferInputs, EGamePhase.WinRound);
                     return;
