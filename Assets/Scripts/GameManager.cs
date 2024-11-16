@@ -26,6 +26,8 @@ public class GameManager : MonoBehaviour
     public float bufferPhaseDuration = 15f;
     public float playerMoveDuration = .5f;
     public float playerShootDuration = .5f;
+    public float PhaseTimer => phaseTimer;
+    
     public enum EGamePhase
     {
         BufferInputs,
