@@ -61,6 +61,15 @@ public class GridManager : MonoBehaviour
         PlacePlayer(0, IngameGrid.Player1SpawnPosition);
         PlacePlayer(1, IngameGrid.Player2SpawnPosition);
     }
+
+    public Vector3 GetCellWorldPosition(Vector2Int position)
+    {
+        var cell = IngameGrid.GetCellAtPos(position);
+        if(cell == null)
+            return Vector3.zero;
+
+        return cell.transform.position;
+    }
     
     public void PlacePlayer(int playerID, Vector2Int position)
     {

@@ -43,10 +43,10 @@ public class GameManager : MonoBehaviour
         player1.pawn = GridManager.Instance.player1;
         player2.pawn = GridManager.Instance.player2;
         
-        IngameCell player1cell = GridManager.Instance.IngameGrid.GetCellAtPos(player1.pawn.position);
-        player1.TeleportTo(player1cell.transform.position);
-        IngameCell player2cell = GridManager.Instance.IngameGrid.GetCellAtPos(player2.pawn.position);
-        player2.TeleportTo(player2cell.transform.position);
+        Vector3 player1Pos = GridManager.Instance.GetCellWorldPosition(player1.pawn.position);
+        player1.TeleportTo(player1Pos);
+        Vector3 player2Pos = GridManager.Instance.GetCellWorldPosition(player2.pawn.position);
+        player2.TeleportTo(player2Pos);
     }
 
     private void OnInputBuffered((int, InputManager.EInputType) arg0)
