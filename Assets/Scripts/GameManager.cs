@@ -171,12 +171,14 @@ public class GameManager : MonoBehaviour
         if (player1Input.IsShootInput())
         {
             player1ShootResult = GridManager.Instance.ShootInDirection(player1Pawn.playerID, player1Pawn.position, player1Dir);
+            result.Player1ShootResult = player1ShootResult;
             result.player1Actions.Add(EAction.Shoot);
         }
 
         if (player2Input.IsShootInput())
         {
             player2ShootResult = GridManager.Instance.ShootInDirection(player2Pawn.playerID, player2Pawn.position, player2Dir);
+            result.Player2ShootResult = player2ShootResult;
             result.player2Actions.Add( EAction.Shoot);
         }
 

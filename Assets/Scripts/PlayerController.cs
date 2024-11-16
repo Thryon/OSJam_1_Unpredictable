@@ -26,15 +26,15 @@ public class PlayerController : MonoBehaviour
 
     public void Shoot(GridManager.ShootResult shot)
     {
-        shootFX.gameObject.SetActive(true);
+        shootFX?.gameObject.SetActive(true);
         var from = GridManager.Instance.GetCellWorldPosition(shot.shootStartPos);
         var to = GridManager.Instance.GetCellWorldPosition(shot.hitPosition);
-        shootFX.SetFromPoint(from);
-        shootFX.SetToPoint(to);
+        shootFX?.SetFromPoint(from);
+        shootFX?.SetToPoint(to);
         Vector3 dir = from - to;
         transform.LookAt(transform.position + dir);
         animator.SetTrigger("Shoot");
-        shootFX.Play(shootDuration);
+        shootFX?.Play(shootDuration);
     }
 
     public float GetShootDuration()
