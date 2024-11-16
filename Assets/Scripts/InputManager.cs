@@ -96,7 +96,41 @@ public class InputManager : MonoBehaviour
     public List<EInputType> player1InputBuffer = new();
     public List<EInputType> player2InputBuffer = new();
 
-    public bool ListenForInputs;
+    private bool listenForInputs = false;
+    public bool ListenForInputs
+    {
+        get
+        {
+            return listenForInputs;
+        }
+
+        set
+        {
+            listenForInputs = value;
+            if (listenForInputs)
+            {
+                Controls.Enable();
+            }
+            else
+            {
+                Controls.Disable();
+            }
+        }
+    }
+    public InputSystem_Actions Controls
+    {
+        get
+        {
+            if (controls == null)
+                controls = new();
+            return controls;
+        }
+
+        set
+        {
+            controls = value;
+        }
+    }
 
     public List<EInputType> GetBuffer(int playerID)
     {
@@ -106,36 +140,43 @@ public class InputManager : MonoBehaviour
     public EInputType PopInputFromBuffer(int playerID)
     {
         var buffer = GetBuffer(playerID);
+        if (buffer.Count == 0)
+            return EInputType.None;
+        
         EInputType inputType = buffer[0];
         buffer.RemoveAt(0);
         return inputType;
     }
 
     public bool IsBufferFull(int playerID) => GetBuffer(playerID).Count >= maxInputsInBuffer;
-    
+    private InputSystem_Actions controls;
     private void Start()
     {
-        var controls = new InputSystem_Actions();
-        controls.Player1.MoveUp.performed += ctx => OnMoveUp(0, ctx);
-        controls.Player1.MoveDown.performed += ctx => OnMoveDown(0, ctx);
-        controls.Player1.MoveLeft.performed += ctx => OnMoveLeft(0, ctx);
-        controls.Player1.MoveRight.performed += ctx => OnMoveRight(0, ctx);
-        controls.Player1.ShootUp.performed += ctx => OnShootUp(0, ctx);
-        controls.Player1.ShootDown.performed += ctx => OnShootDown(0, ctx);
-        controls.Player1.ShootLeft.performed += ctx => OnShootLeft(0, ctx);
-        controls.Player1.ShootRight.performed += ctx => OnShootRight(0, ctx);
+        Controls.Player1.MoveUp.performed += ctx => OnMoveUp(0, ctx);
+        Controls.Player1.MoveDown.performed += ctx => OnMoveDown(0, ctx);
+        Controls.Player1.MoveLeft.performed += ctx => OnMoveLeft(0, ctx);
+        Controls.Player1.MoveRight.performed += ctx => OnMoveRight(0, ctx);
+        Controls.Player1.ShootUp.performed += ctx => OnShootUp(0, ctx);
+        Controls.Player1.ShootDown.performed += ctx => OnShootDown(0, ctx);
+        Controls.Player1.ShootLeft.performed += ctx => OnShootLeft(0, ctx);
+        Controls.Player1.ShootRight.performed += ctx => OnShootRight(0, ctx);
         
-        controls.Player2.MoveUp.performed += ctx => OnMoveUp(1, ctx);
-        controls.Player2.MoveDown.performed += ctx => OnMoveDown(1, ctx);
-        controls.Player2.MoveLeft.performed += ctx => OnMoveLeft(1, ctx);
-        controls.Player2.MoveRight.performed += ctx => OnMoveRight(1, ctx);
-        controls.Player2.ShootUp.performed += ctx => OnShootUp(1, ctx);
-        controls.Player2.ShootDown.performed += ctx => OnShootDown(1, ctx);
-        controls.Player2.ShootLeft.performed += ctx => OnShootLeft(1, ctx);
-        controls.Player2.ShootRight.performed += ctx => OnShootRight(1, ctx);
+        Controls.Player2.MoveUp.performed += ctx => OnMoveUp(1, ctx);
+        Controls.Player2.MoveDown.performed += ctx => OnMoveDown(1, ctx);
+        Controls.Player2.MoveLeft.performed += ctx => OnMoveLeft(1, ctx);
+        Controls.Player2.MoveRight.performed += ctx => OnMoveRight(1, ctx);
+        Controls.Player2.ShootUp.performed += ctx => OnShootUp(1, ctx);
+        Controls.Player2.ShootDown.performed += ctx => OnShootDown(1, ctx);
+        Controls.Player2.ShootLeft.performed += ctx => OnShootLeft(1, ctx);
+        Controls.Player2.ShootRight.performed += ctx => OnShootRight(1, ctx);
     }
 
-    
+
+    public void ClearInputs()
+    {
+        player1InputBuffer.Clear();
+        player2InputBuffer.Clear();
+    }
 }
 
 public static class EInputTypeExtensions

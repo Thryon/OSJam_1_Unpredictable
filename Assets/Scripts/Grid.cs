@@ -11,11 +11,9 @@ public class Cell
 {
     public Vector2 position;
     public Grid grid;
-    public int playerID = -1;
     public bool isWall;
 
     public List<CellContent> CellContents = new List<CellContent>();
-    
     
     public bool IsPlayerObstacle()
     {
@@ -31,13 +29,6 @@ public class Cell
             return true;
         
         return CellContents.FindIndex(x => x.isShootObstacle) != -1;
-    }
-    
-    public bool HasPlayer => playerID != -1;
-
-    public void RemovePlayer()
-    {
-        playerID = -1;
     }
 
     public CellContent GetFirstShootableContent()
@@ -58,7 +49,7 @@ public class Grid
         {
             for (int x = 0; x < width; x++)
             {
-                cells[x,y] = new Cell();
+                cells[x,y] = new Cell() { position = new Vector2Int(x, y), grid = this };
             }
         }
     }

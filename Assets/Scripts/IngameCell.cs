@@ -11,17 +11,6 @@ public class IngameCell : MonoBehaviour
     Vector2Int positionInGrid;
 
     public Vector2Int PositionInGrid => positionInGrid;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void SetPositionInGrid(int x, int y)
     {

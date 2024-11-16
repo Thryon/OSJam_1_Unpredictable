@@ -23,20 +23,45 @@ public class GridManager : MonoBehaviour
     public Grid grid;
     public PlayerPawn player1 = new() {playerID = 0};
     public PlayerPawn player2 = new() {playerID = 1};
+    public IngameGrid IngameGrid;
+
+    public void InitWithIngameGrid(IngameGrid ingameGrid)
+    {
+        IngameGrid = ingameGrid;
+        gridWidth = ingameGrid.Size.x;
+        gridHeight = ingameGrid.Size.y;
+        grid = new Grid(gridWidth, gridHeight);
+        for (int y = 0; y < gridHeight; y++)
+        {
+            for (int x = 0; x < gridWidth; x++)
+            {
+                var cell = grid.GetCellAtPosition(new Vector2Int(x, y));
+                var ingameCell = ingameGrid.GetCellAtPos(x, y);
+                cell.isWall = ingameCell.Type == IngameCell.EType.Wall;
+            }
+        }
+    }
 
     public PlayerPawn GetPlayer(int playerID)
     {
         return playerID == player1.playerID ? player1 : player2;
     }
-    
+
     private void Awake()
     {
         if(!instance)
             instance = this;
-        grid = new Grid(gridWidth, gridHeight);
-        
+        var ingameGrid = FindFirstObjectByType<IngameGrid>();
+        InitWithIngameGrid(ingameGrid);
+        PlacePlayersOnSpawnPoints();
     }
 
+    public void PlacePlayersOnSpawnPoints()
+    {
+        PlacePlayer(0, IngameGrid.Player1SpawnPosition);
+        PlacePlayer(1, IngameGrid.Player2SpawnPosition);
+    }
+    
     public void PlacePlayer(int playerID, Vector2Int position)
     {
         PlayerPawn pawn = GetPlayer(playerID);
@@ -53,13 +78,10 @@ public class GridManager : MonoBehaviour
         if(!IsPosInGrid(position))
             return;
         Cell curPlayerCell = grid.GetCellAtPosition(position);
-        if (curPlayerCell != null)
-        {
-            curPlayerCell.RemovePlayer();
-        }
+        // Do something on the cell the player just left ? 
         pawn.position = position;
         Cell cell = grid.GetCellAtPosition(position);
-        cell.playerID = pawn.playerID;
+        // Do something on the cell the player just arrived to ?
     }
 
     public void MovePlayer(PlayerPawn pawn, Vector2Int direction)
@@ -68,6 +90,13 @@ public class GridManager : MonoBehaviour
         if (grid.IsValidPos(targetPos))
         {
             PlacePlayer(pawn, targetPos);
+            GlobalEvents.OnPlayerMoved.Invoke(new GlobalEvents.Movement()
+            {
+                playerID = pawn.playerID,
+                direction = direction,
+                from = pawn.position,
+                to = targetPos
+            });
         }
     }
     public void MovePlayer(PlayerPawn pawn, Vector2Int direction, int times)
@@ -87,12 +116,13 @@ public class GridManager : MonoBehaviour
         public bool hitWall;
         public Cell cell;
         public Vector2Int hitPosition;
+        public Vector2Int shootDirection;
         public bool HitNothing => !hitPlayer && !hitCellContent && !hitWall; 
     }
-
-    public ShootResult ShootInDirection(Vector2Int startPos, Vector2Int direction)
+    
+    public ShootResult ShootInDirection(int playerID, Vector2Int startPos, Vector2Int direction)
     {
-        ShootResult result = new ShootResult();
+        ShootResult result = new ShootResult() {shootDirection = direction};
         bool found = false;
         Vector2Int targetPos = startPos;
         while (!found)
@@ -106,12 +136,13 @@ public class GridManager : MonoBehaviour
                 break;
             }
 
-            if (cell.HasPlayer)
+            if (player1.position == targetPos || player2.position == targetPos)
             {
                 result.hitPlayer = true;
-                result.playerHitID = cell.playerID;
+                result.playerHitID = player1.position == targetPos ? 0 : 1;
                 result.hitPosition = targetPos;
                 result.cell = cell;
+                found = true;
             }
             else if (cell.IsShootObstacle())
             {
@@ -120,6 +151,7 @@ public class GridManager : MonoBehaviour
                     result.hitWall = true;
                     result.hitPosition = targetPos;
                     result.cell = cell;
+                    found = true;
                 }
                 else
                 {
@@ -127,9 +159,19 @@ public class GridManager : MonoBehaviour
                     result.cellContent = cell.GetFirstShootableContent();
                     result.hitPosition = targetPos;
                     result.cell = cell;
+                    found = true;
                 }
             }
         }
+        
+        GlobalEvents.OnPlayerShot.Invoke(new GlobalEvents.Shot()
+        {
+            playerID = playerID,
+            direction = direction,
+            from = startPos,
+            to = targetPos,
+            result = result
+        });
         
         return result;
     }

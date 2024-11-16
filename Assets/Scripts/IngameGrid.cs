@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -7,18 +9,17 @@ using UnityEngine.Serialization;
 public class IngameGrid : MonoBehaviour
 {
     [SerializeField] private Vector2Int gridSize;
+    [SerializeField] private Vector2Int player1SpawnPosition;
+    [SerializeField] private Vector2Int player2SpawnPosition;
     [SerializeField] private float cellsDistance = 1f;
     [SerializeField] private IngameCell _ingameCellPrefab;
     [SerializeField] private bool _regenerateGrid;
     
     public List<IngameCell> cells = new List<IngameCell>();
+    public Vector2Int Size => gridSize;
+    public Vector2Int Player1SpawnPosition => player1SpawnPosition;
+    public Vector2Int Player2SpawnPosition => player2SpawnPosition;
     
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
         #if UNITY_EDITOR
@@ -27,6 +28,7 @@ public class IngameGrid : MonoBehaviour
             if (_regenerateGrid)
             {
                 _regenerateGrid = false;
+                EditorUtility.SetDirty(this);
                 GenerateGrid();
             }
         }
@@ -46,7 +48,7 @@ public class IngameGrid : MonoBehaviour
     
     private void GenerateGrid()
     {
-        if (_regenerateGrid == null)
+        if (_ingameCellPrefab == null)
         {
             Debug.LogError("No cell prefab assigned to IngameGrid");
             return;
@@ -63,7 +65,12 @@ public class IngameGrid : MonoBehaviour
         }
     }
 
-    private IngameCell GetCellAtPos(int x, int y)
+    public IngameCell GetCellAtPos(Vector2Int position)
+    {
+        return GetCellAtPos(position.x, position.y);
+    }
+
+    public IngameCell GetCellAtPos(int x, int y)
     {
         return cells[x + y * gridSize.x];
     }

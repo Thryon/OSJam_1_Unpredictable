@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -19,12 +20,15 @@ public class GameManager : MonoBehaviour
             return instance;
         }
     }
-    public List<PlayerController> players = new();
+    // public List<PlayerController> players = new();
+    public PlayerController player1;
+    public PlayerController player2;
     public float bufferPhaseDuration = 15f;
     public enum EGamePhase
     {
         BufferInputs,
-        Play
+        Play,
+        Win
     }
     
     public EGamePhase currentGamePhase;
@@ -35,6 +39,14 @@ public class GameManager : MonoBehaviour
         if(!instance)
             instance = this;
         GlobalEvents.OnInputBuffered.AddListener(OnInputBuffered);
+        GoToPhase(EGamePhase.BufferInputs, EGamePhase.BufferInputs);
+        player1.pawn = GridManager.Instance.player1;
+        player2.pawn = GridManager.Instance.player2;
+        
+        IngameCell player1cell = GridManager.Instance.IngameGrid.GetCellAtPos(player1.pawn.position);
+        player1.TeleportTo(player1cell.transform.position);
+        IngameCell player2cell = GridManager.Instance.IngameGrid.GetCellAtPos(player2.pawn.position);
+        player2.TeleportTo(player2cell.transform.position);
     }
 
     private void OnInputBuffered((int, InputManager.EInputType) arg0)
@@ -56,12 +68,17 @@ public class GameManager : MonoBehaviour
                     (InputManager.Instance.IsBufferFull(0) && InputManager.Instance.IsBufferFull(1)))
                 {
                     GoToPhase(EGamePhase.Play, EGamePhase.BufferInputs);
-                    GlobalEvents.OnBufferPhaseDone.Invoke();
+                    
                     return;
                 }
             }
             break;
             case EGamePhase.Play:
+            {
+                
+            }
+            break;
+            case EGamePhase.Win:
             {
                 
             }
@@ -75,14 +92,32 @@ public class GameManager : MonoBehaviour
     {
         phaseTimer = 0f;
         currentGamePhase = to;
+        if (from == EGamePhase.BufferInputs)
+        {
+            GlobalEvents.OnBufferPhaseDone.Invoke();
+            InputManager.Instance.ListenForInputs = false;
+        }
+        
 
-        if (to == EGamePhase.Play)
+        if (to == EGamePhase.BufferInputs)
+        {
+            InputManager.Instance.ClearInputs();
+            InputManager.Instance.ListenForInputs = true;
+            GlobalEvents.OnBufferPhaseStarted.Invoke();
+        }
+        else if (to == EGamePhase.Play)
         {
             StartCoroutine(PlayCoroutine());
         }
+        else if (to == EGamePhase.Win)
+        {
+            
+        }
     }
 
-    private void ProcessGameLoopOnce()
+    private int currentInputIndex = 0;
+    
+    private EPlayPhaseResult ProcessGameLoopOnce()
     {
         var player1Pawn = GridManager.Instance.GetPlayer(0);
         var player2Pawn = GridManager.Instance.GetPlayer(1);
@@ -94,6 +129,9 @@ public class GameManager : MonoBehaviour
 
         GridManager.ShootResult player1ShootResult = null;
         GridManager.ShootResult player2ShootResult = null;
+
+        if (player1Input == InputManager.EInputType.None && player2Input == InputManager.EInputType.None)
+            return EPlayPhaseResult.Continue;
         
         if (player1Input.IsMovementInput())
         {
@@ -107,27 +145,44 @@ public class GameManager : MonoBehaviour
 
         if (player1Input.IsShootInput())
         {
-            player1ShootResult = GridManager.Instance.ShootInDirection(player1Pawn.position, player1Dir);
+            player1ShootResult = GridManager.Instance.ShootInDirection(player1Pawn.playerID, player1Pawn.position, player1Dir);
         }
 
         if (player2Input.IsShootInput())
         {
-            player2ShootResult = GridManager.Instance.ShootInDirection(player2Pawn.position, player2Dir);
+            player2ShootResult = GridManager.Instance.ShootInDirection(player2Pawn.playerID, player2Pawn.position, player2Dir);
         }
 
         if (player1ShootResult != null)
         {
             if (player2ShootResult != null)
             {
-                if ((player2ShootResult.hitPlayer && player2ShootResult.playerHitID == 0) && (player1ShootResult.hitPlayer && player1ShootResult.playerHitID == 1))
+                if ((player2ShootResult.hitPlayer && player2ShootResult.playerHitID == 0) &&
+                    (player1ShootResult.hitPlayer && player1ShootResult.playerHitID == 1))
                 {
-                    // Both players shoot themselves, it's a draw
+                    // Both players shoot each other, it's a draw
+                    return EPlayPhaseResult.Draw;
                 }
             }
+
+            if (player1ShootResult.hitPlayer && player1ShootResult.playerHitID == 1)
+            {
+                return EPlayPhaseResult.Player1Win;
+            }
         }
+
+        if (player2ShootResult != null)
+        {
+            if (player2ShootResult.hitPlayer && player2ShootResult.playerHitID == 0)
+            {
+                return EPlayPhaseResult.Player2Win;
+            }
+        }
+
+        return EPlayPhaseResult.Continue;
     }
 
-    public enum EPhaseResult
+    public enum EPlayPhaseResult
     {
         Continue,
         Player1Win,
@@ -135,9 +190,21 @@ public class GameManager : MonoBehaviour
         Draw
     }
 
-    public void EndPlay(EPhaseResult result)
+    public EPlayPhaseResult LastPlayPhaseResult;
+    public void EndPlay(EPlayPhaseResult result)
     {
-        
+        LastPlayPhaseResult = result;
+        GlobalEvents.OnPlayPhaseDone.Invoke(result);
+        if (result == EPlayPhaseResult.Continue)
+        {
+            GoToPhase(EGamePhase.BufferInputs, EGamePhase.Play);
+        }
+        else if (result == EPlayPhaseResult.Player1Win || 
+                 result == EPlayPhaseResult.Player2Win || 
+                 result == EPlayPhaseResult.Draw)
+        {
+            GoToPhase(EGamePhase.Win, EGamePhase.Play);
+        }
     }
     
     public Vector2Int GetDirectionFromInput(InputManager.EInputType inputType)
@@ -166,7 +233,33 @@ public class GameManager : MonoBehaviour
     
     private IEnumerator PlayCoroutine()
     {
-        
-        yield break;
+        int processedInputs = 0;
+        int totalInputsCount = InputManager.Instance.maxInputsInBuffer;
+        while (processedInputs < totalInputsCount)
+        {
+            EPlayPhaseResult result = ProcessGameLoopOnce();
+            processedInputs++;
+            
+            IngameCell player1cell = GridManager.Instance.IngameGrid.GetCellAtPos(player1.pawn.position);
+            
+            player1.MoveTo(player1cell.transform.position, 0.5f);
+            IngameCell player2cell = GridManager.Instance.IngameGrid.GetCellAtPos(player2.pawn.position);
+            player2.MoveTo(player2cell.transform.position , 0.5f);
+            
+            yield return new WaitForSeconds(0.5f);
+            if(result.IsEndingResult())
+            {
+                EndPlay(result);
+                yield break;
+            }
+        }
+        EndPlay(EPlayPhaseResult.Continue);
+    }
+}
+public static class PlayPhaseResultExtension
+{
+    public static bool IsEndingResult(this GameManager.EPlayPhaseResult result)
+    {
+        return (result == GameManager.EPlayPhaseResult.Draw || result == GameManager.EPlayPhaseResult.Player1Win || result == GameManager.EPlayPhaseResult.Player2Win);
     }
 }
