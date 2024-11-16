@@ -29,6 +29,8 @@ public class PlayerController : MonoBehaviour
         var to = GridManager.Instance.GetCellWorldPosition(shot.to);
         shootFX.SetFromPoint(from);
         shootFX.SetToPoint(to);
+        Vector3 dir = from - to;
+        transform.LookAt(transform.position + dir);
         shootFX.Play(duration);
         animator.SetTrigger("Shoot");
     }
