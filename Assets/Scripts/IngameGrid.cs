@@ -97,6 +97,14 @@ public class IngameGrid : MonoBehaviour
 
     public IngameCell GetCellAtPos(Vector2Int position)
     {
+        if (position.x >= gridSize.x)
+        {
+            return GetCellAtPos(position.x - 1, position.y);
+        }
+        else if (position.y >= gridSize.y)
+        {
+            return GetCellAtPos(position.x, position.y - 1);
+        }
         return GetCellAtPos(position.x, position.y);
     }
 
