@@ -7,7 +7,7 @@ public class GameUI : MonoBehaviour
 {
     [SerializeField] private GameObject _bannerRoundInfo;
     [SerializeField] private GameObject _tutorialInfo;
-    [SerializeField] private GameObject _winScreen;
+    [SerializeField] private WinScreen _winScreen;
 
     private void Awake()
     {
@@ -21,7 +21,8 @@ public class GameUI : MonoBehaviour
 
     private void OnWin()
     {
-        _winScreen.SetActive(true);
+        _winScreen.gameObject.SetActive(true);
+        _winScreen.Setup(GameManager.Instance.LastPlayPhaseResult);
     }
 
     public void ReloadGame()
@@ -41,7 +42,7 @@ public class GameUI : MonoBehaviour
     public void Start()
     {
         GlobalEvents.OnInputBuffered.AddListener(DisableTutorialText);
-        _winScreen.SetActive(false);
+        _winScreen.gameObject.SetActive(false);
         _bannerRoundInfo.transform.localScale = Vector3.zero;
     }
 
