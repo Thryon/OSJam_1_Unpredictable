@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     public ShootFX shootFX;
     public float shootDuration = 0.5f;
     public float deathDuration = 0.5f;
+    public Transform shootPos;
 
     public Animator animator;
 
@@ -29,7 +30,7 @@ public class PlayerController : MonoBehaviour
         shootFX?.gameObject.SetActive(true);
         var from = GridManager.Instance.GetCellWorldPosition(shot.shootStartPos);
         var to = GridManager.Instance.GetCellWorldPosition(shot.hitPosition);
-        shootFX?.SetFromPoint(from);
+        shootFX?.SetFromPoint(shootPos.position);
         shootFX?.SetToPoint(to);
         Vector3 dir = to - from;
         transform.LookAt(transform.position + dir);
