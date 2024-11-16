@@ -11,11 +11,13 @@ public class IngameCell : MonoBehaviour
     public enum EType
     {
         Ground,
-        Wall
+        Wall,
+        Teleporter,
     }
     public EType Type;
     public GameObject GroundModel;
     public GameObject WallModel;
+    public GameObject TeleporterModel;
     [FormerlySerializedAs("renderer")] public MeshRenderer groundRenderer;
     [SerializeField] Vector2Int positionInGrid;
     public Vector2Int PositionInGrid => positionInGrid;
@@ -41,6 +43,7 @@ public class IngameCell : MonoBehaviour
     {
         GroundModel.SetActive(Type == EType.Ground);
         WallModel.SetActive(Type == EType.Wall);
+        TeleporterModel.SetActive(Type == EType.Teleporter);
 #if UNITY_EDITOR
         if (!Application.isPlaying)
         {
