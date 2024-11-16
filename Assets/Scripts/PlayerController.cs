@@ -49,6 +49,6 @@ public class PlayerController : MonoBehaviour
 
     public void Kill()
     {
-        
+        animator.SetTrigger("death");
     }
 }
