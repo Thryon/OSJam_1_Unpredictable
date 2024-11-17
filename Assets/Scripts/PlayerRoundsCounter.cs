@@ -13,7 +13,14 @@ public class PlayerRoundsCounter : MonoBehaviour
     private void Awake()
     {
         GlobalEvents.OnRoundWin.AddListener(OnRoundWin);
+        GlobalEvents.OnGameWin.AddListener(OnRoundWin);
         RefreshImages();
+    }
+
+    private void OnDestroy()
+    {
+        GlobalEvents.OnRoundWin.RemoveListener(OnRoundWin);
+        GlobalEvents.OnGameWin.RemoveListener(OnRoundWin);
     }
 
     private void OnRoundWin()
