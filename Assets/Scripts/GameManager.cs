@@ -488,6 +488,15 @@ public class GameManager : MonoBehaviour
     {
         return playerID == 0 ? player1WonRounds : player2WonRounds;
     }
+
+    public bool paused = false;
+    
+    public void TogglePause()
+    {
+        paused = !paused;
+        Time.timeScale = paused ? 0f : 1f;
+        GlobalEvents.PauseToggled.Invoke(paused);
+    }
 }
 public static class PlayPhaseResultExtension
 {

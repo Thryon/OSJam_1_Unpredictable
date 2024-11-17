@@ -14,6 +14,7 @@ public static class GlobalEvents
     public static UnityEvent OnGameWin = new ();
     public static UnityEvent ResetForNewRound = new ();
     public static UnityEvent OnNewGameLoopIteration = new ();
+    public static UnityEvent<bool> PauseToggled = new ();
 
     public class MovementEvent : UnityEvent<GridManager.MoveResult>{}
     public static MovementEvent OnPlayerMoved = new ();

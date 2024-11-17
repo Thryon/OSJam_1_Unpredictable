@@ -169,6 +169,13 @@ public class InputManager : MonoBehaviour
         Controls.Player2.ShootDown.performed += ctx => OnShootDown(1, ctx);
         Controls.Player2.ShootLeft.performed += ctx => OnShootLeft(1, ctx);
         Controls.Player2.ShootRight.performed += ctx => OnShootRight(1, ctx);
+
+        Controls.General.Pause.performed += ctx => OnPause();
+    }
+    
+    private void OnPause()
+    {
+        GameManager.Instance.TogglePause();
     }
 
 
