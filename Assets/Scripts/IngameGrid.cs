@@ -96,6 +96,7 @@ public class IngameGrid : MonoBehaviour
         cells.Clear();
     }
     
+#if UNITY_EDITOR
     private void GenerateGrid()
     {
         if (_ingameCellPrefab == null)
@@ -104,9 +105,7 @@ public class IngameGrid : MonoBehaviour
             return;
         }
         ClearGrid();
-#if UNITY_EDITOR
         Undo.RecordObject(this, "Generate Grid");
-#endif
         for (int y = 0; y < gridSize.y; y++)
         {
             for (int x = 0; x < gridSize.x; x++)
@@ -116,6 +115,7 @@ public class IngameGrid : MonoBehaviour
             }
         }
     }
+#endif
 
     public IngameCell GetCellAtPos(Vector2Int position)
     {
@@ -143,16 +143,16 @@ public class IngameGrid : MonoBehaviour
         return cells[x + y * gridSize.x];
     }
 
+#if UNITY_EDITOR
     private IngameCell SpawnCell(int x, int y)
     {
         IngameCell cell = (IngameCell)PrefabUtility.InstantiatePrefab(_ingameCellPrefab, transform);
         cell.transform.localPosition = new Vector3(x * cellsDistance, 0f, y * cellsDistance);
         cell.SetPositionInGrid(x, y);
         cell.name = "Cell_" + x + "_" + y;
-        #if UNITY_EDITOR
             Undo.RegisterCreatedObjectUndo(cell.gameObject, "Generate Grid");
             EditorUtility.SetDirty(cell);
-        #endif
         return cell;
     }
+#endif
 }
