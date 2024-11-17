@@ -26,6 +26,8 @@ public class GameManager : MonoBehaviour
     public float bufferPhaseDuration = 15f;
     public float roundWinPhaseDuration = 2f;
     public float playerMoveDuration = .5f;
+    public float playerTeleportCooldown = .25f;
+    public float playerTeleportDelay = .25f;
     public int RoundsWonBeforeVictory = 3;
     public float PhaseTimer => phaseTimer;
     
@@ -164,6 +166,8 @@ public class GameManager : MonoBehaviour
         public List<EAction> player2Actions = new();
         public GridManager.ShootResult Player1ShootResult;
         public GridManager.ShootResult Player2ShootResult;
+        public GridManager.MoveResult Player1MoveResult;
+        public GridManager.MoveResult Player2MoveResult;
         public EPlayPhaseResult playPhaseResult;
     }
     
@@ -183,6 +187,9 @@ public class GameManager : MonoBehaviour
         GridManager.ShootResult player1ShootResult = null;
         GridManager.ShootResult player2ShootResult = null;
 
+        GridManager.MoveResult player1MoveResult = null;
+        GridManager.MoveResult player2MoveResult = null;
+
         if (player1Input == InputManager.EInputType.None && player2Input == InputManager.EInputType.None)
         {
             result.playPhaseResult = EPlayPhaseResult.Continue;
@@ -191,13 +198,15 @@ public class GameManager : MonoBehaviour
         
         if (player1Input.IsMovementInput())
         {
-            GridManager.Instance.MovePlayer(player1Pawn, player1Dir);
+            player1MoveResult = GridManager.Instance.MovePlayer(player1Pawn, player1Dir);
+            result.Player1MoveResult = player1MoveResult;
             result.player1Actions.Add(EAction.Move);
         }
 
         if (player2Input.IsMovementInput())
         {
-            GridManager.Instance.MovePlayer(player2Pawn, player2Dir);
+            player2MoveResult = GridManager.Instance.MovePlayer(player2Pawn, player2Dir);
+            result.Player2MoveResult = player2MoveResult;
             result.player2Actions.Add(EAction.Move);
         }
 
@@ -349,20 +358,43 @@ public class GameManager : MonoBehaviour
             if (result.player1Actions.Contains(EAction.Move))
             {
                 hasAnyMovement = true;
-                IngameCell player1cell = GridManager.Instance.IngameGrid.GetCellAtPos(player1.pawn.position);
+                IngameCell player1cell = GridManager.Instance.IngameGrid.GetCellAtPos(result.Player1MoveResult.toPosition);
                 player1.MoveTo(player1cell.transform.position, 0.5f);
             }
             
             if (result.player2Actions.Contains(EAction.Move))
             {
                 hasAnyMovement = true;
-                IngameCell player2cell = GridManager.Instance.IngameGrid.GetCellAtPos(player2.pawn.position);
+                IngameCell player2cell = GridManager.Instance.IngameGrid.GetCellAtPos(result.Player2MoveResult.toPosition);
                 player2.MoveTo(player2cell.transform.position , 0.5f);
             }
 
             if (hasAnyMovement)
             {
                 yield return new WaitForSeconds(playerMoveDuration);
+            }
+
+            bool hasAnyTp = false;
+            
+            if (result.player1Actions.Contains(EAction.Move) 
+                && result.Player1MoveResult.teleported)
+            {
+                hasAnyTp = true;
+                IngameCell player1cell = GridManager.Instance.IngameGrid.GetCellAtPos(result.Player1MoveResult.teleportDestination);
+                player1.TeleportToWithVisuals(player1cell.transform.position, playerTeleportDelay);
+            }
+            
+            if (result.player2Actions.Contains(EAction.Move) 
+                && result.Player2MoveResult.teleported)
+            {
+                hasAnyTp = true;
+                IngameCell player2cell = GridManager.Instance.IngameGrid.GetCellAtPos(result.Player2MoveResult.teleportDestination);
+                player2.TeleportToWithVisuals(player2cell.transform.position, playerTeleportDelay);
+            }
+
+            if (hasAnyTp)
+            {
+                yield return new WaitForSeconds(playerTeleportDelay + playerTeleportCooldown);
             }
             
             bool hasAnyShots = false;

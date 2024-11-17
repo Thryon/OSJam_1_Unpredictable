@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class GridManager : MonoBehaviour
 {
@@ -24,6 +26,8 @@ public class GridManager : MonoBehaviour
     public PlayerPawn player1 = new() {playerID = 0};
     public PlayerPawn player2 = new() {playerID = 1};
     public IngameGrid IngameGrid;
+    
+    public Dictionary<string, List<Cell>> teleporterCellsDictionary = new();
 
     public void InitWithIngameGrid(IngameGrid ingameGrid)
     {
@@ -31,13 +35,29 @@ public class GridManager : MonoBehaviour
         gridWidth = ingameGrid.Size.x;
         gridHeight = ingameGrid.Size.y;
         grid = new Grid(gridWidth, gridHeight);
+        teleporterCellsDictionary.Clear();
+        
         for (int y = 0; y < gridHeight; y++)
         {
             for (int x = 0; x < gridWidth; x++)
             {
-                var cell = grid.GetCellAtPosition(new Vector2Int(x, y));
+                Cell cell = grid.GetCellAtPosition(new Vector2Int(x, y));
                 var ingameCell = ingameGrid.GetCellAtPos(x, y);
                 cell.isWall = ingameCell.Type == IngameCell.EType.Wall;
+                if (ingameCell.Type == IngameCell.EType.Teleporter)
+                {
+                    var teleporter = ingameCell.GetComponentInChildren<IngameTeleporter>(true);
+                    if (teleporter != null)
+                    {
+                        cell.isTeleporter = true;
+                        cell.teleporterID = teleporter.connectionID;
+                        if (!teleporterCellsDictionary.ContainsKey(teleporter.connectionID))
+                        {
+                            teleporterCellsDictionary.Add(teleporter.connectionID, new List<Cell>());
+                        }
+                        teleporterCellsDictionary[teleporter.connectionID].Add(cell);
+                    }
+                }
             }
         }
     }
@@ -93,27 +113,59 @@ public class GridManager : MonoBehaviour
         // Do something on the cell the player just arrived to ?
     }
 
-    public void MovePlayer(PlayerPawn pawn, Vector2Int direction)
+    public class MoveResult
     {
+        public PlayerPawn playerPawn;
+        public bool hitObstacle;
+        public Cell cell;
+        public Vector2Int fromPosition;
+        public Vector2Int toPosition;
+        public Vector2Int direction;
+        public Vector2Int teleportDestination;
+        public bool teleported;
+    }
+    
+    public MoveResult MovePlayer(PlayerPawn pawn, Vector2Int direction)
+    {
+        MoveResult result = new()
+        {
+            playerPawn = pawn,
+            direction = direction , 
+            fromPosition = pawn.position,
+            toPosition = pawn.position + direction,
+            cell = grid.IsPosInGrid(pawn.position) ? grid.GetCellAtPosition(pawn.position): null
+        };
         Vector2Int targetPos = pawn.position + direction;
         if (grid.IsValidPos(targetPos))
         {
             PlacePlayer(pawn, targetPos);
-            GlobalEvents.OnPlayerMoved.Invoke(new GlobalEvents.Movement()
+            var cell = grid.GetCellAtPosition(targetPos);
+            if (cell.isTeleporter)
             {
-                playerID = pawn.playerID,
-                direction = direction,
-                from = pawn.position,
-                to = targetPos
-            });
+
+                if (teleporterCellsDictionary.TryGetValue(cell.teleporterID, out var teleporterCells))
+                {
+                    List<Cell> targetCells = new List<Cell>(teleporterCells);
+                    targetCells.Remove(cell);
+                    if (targetCells.Count > 0)
+                    {
+                        int rndIndex = Random.Range(0, targetCells.Count);
+                        var targetCell = targetCells[rndIndex];
+                        PlacePlayer(pawn, targetCell.position);
+                        result.teleported = true;
+                        result.teleportDestination = targetCell.position;
+                    }
+                }
+            }
+            GlobalEvents.OnPlayerMoved.Invoke(result);
         }
-    }
-    public void MovePlayer(PlayerPawn pawn, Vector2Int direction, int times)
-    {
-        for (int i = 0; i < times; i++)
+        else
         {
-            MovePlayer(pawn, direction);
+            result.hitObstacle = true;
+            GlobalEvents.OnPlayerFailedToMove.Invoke(result);
         }
+
+        return result;
     }
 
     public class ShootResult

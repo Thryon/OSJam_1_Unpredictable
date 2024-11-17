@@ -9,9 +9,11 @@ public class CellContent
 
 public class Cell
 {
-    public Vector2 position;
+    public Vector2Int position;
     public Grid grid;
     public bool isWall;
+    public bool isTeleporter;
+    public string teleporterID;
 
     public List<CellContent> CellContents = new List<CellContent>();
     

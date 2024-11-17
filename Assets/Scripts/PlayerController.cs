@@ -1,4 +1,5 @@
 
+using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public float shootDuration = 0.5f;
     public float deathDuration = 0.5f;
     public Transform shootPos;
+    public ParticleSystem teleportParticles;
 
     public Animator animator;
 
@@ -23,6 +25,25 @@ public class PlayerController : MonoBehaviour
     public void TeleportTo(Vector3 position)
     {
         transform.position = position;
+    }
+
+    public void TeleportToWithVisuals(Vector3 position, float delay)
+    {
+        teleportParticles?.Play();
+        if (delay > 0f)
+        {
+            StartCoroutine(TeleportInSeconds(position, delay));
+        }
+        else
+        {
+            TeleportTo(position);
+        }
+    }
+
+    private IEnumerator TeleportInSeconds(Vector3 position, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        TeleportTo(position);
     }
 
     public void Shoot(GridManager.ShootResult shot)

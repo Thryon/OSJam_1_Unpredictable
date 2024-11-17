@@ -15,15 +15,9 @@ public static class GlobalEvents
     public static UnityEvent ResetForNewRound = new ();
     public static UnityEvent OnNewGameLoopIteration = new ();
 
-    public struct Movement
-    {
-        public int playerID;
-        public Vector2Int from;
-        public Vector2Int direction;
-        public Vector2Int to;
-    }
-    public class MovementEvent : UnityEvent<Movement>{}
+    public class MovementEvent : UnityEvent<GridManager.MoveResult>{}
     public static MovementEvent OnPlayerMoved = new ();
+    public static MovementEvent OnPlayerFailedToMove = new ();
     public struct Shot
     {
         public int playerID;
