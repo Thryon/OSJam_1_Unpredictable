@@ -62,6 +62,7 @@ public class GameManager : MonoBehaviour
         player1.Reset();
         player2.Reset();
         
+        GridManager.Instance.PlacePlayersOnSpawnPoints();
         Vector3 player1Pos = GridManager.Instance.GetCellWorldPosition(player1.pawn.position);
         player1.TeleportTo(player1Pos);
         Vector3 player2Pos = GridManager.Instance.GetCellWorldPosition(player2.pawn.position);
