@@ -9,17 +9,21 @@ using UnityEngine.UI;
 public class GameUI : MonoBehaviour
 {
     [SerializeField] private GameObject _bannerRoundInfo;
+    [SerializeField] private TextMeshProUGUI _textRound;
     [SerializeField] private GameObject _tutorialInfo;
     [FormerlySerializedAs("_winScreen")] [SerializeField] private WinScreen gameWinScreen;
     [SerializeField] private WinScreen roundWinScreen;
     [SerializeField] private TextMeshProUGUI _textTimer;
 
     private GameManager _gameManager;
+    private int _roundNumber = 1;
+    
     private void Awake()
     {
         GlobalEvents.OnGameWin.AddListener(OnWin);
         GlobalEvents.OnRoundWin.AddListener(OnRoundWin);
         GlobalEvents.ResetForNewRound.AddListener(ResetForNewRound);
+        _textRound.text = "Round N°1";
     }
 
     private void OnDestroy()
@@ -32,6 +36,8 @@ public class GameUI : MonoBehaviour
     private void ResetForNewRound()
     {
         roundWinScreen.gameObject.SetActive(false);
+        _roundNumber++;
+        _textRound.text = ("Round N°" + _roundNumber);
     }
 
     private void OnRoundWin()
@@ -49,6 +55,7 @@ public class GameUI : MonoBehaviour
     public void ReloadGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        _roundNumber = 1;
     }
 
     private void Update()

@@ -3252,6 +3252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _bannerRoundInfo: {fileID: 4715456520052978055}
+  _textRound: {fileID: 5549613291662121349}
   _tutorialInfo: {fileID: 5403242194383474643}
   gameWinScreen: {fileID: 6319383148504711552}
   roundWinScreen: {fileID: 4165718761938116272}
