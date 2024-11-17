@@ -13,6 +13,7 @@ public static class GlobalEvents
     public static UnityEvent OnRoundWin = new ();
     public static UnityEvent OnGameWin = new ();
     public static UnityEvent ResetForNewRound = new ();
+    public static UnityEvent OnNewGameLoopIteration = new ();
 
     public struct Movement
     {

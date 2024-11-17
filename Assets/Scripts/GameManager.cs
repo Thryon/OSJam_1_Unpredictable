@@ -342,6 +342,7 @@ public class GameManager : MonoBehaviour
         int totalInputsCount = InputManager.Instance.maxInputsInBuffer;
         while (processedInputs < totalInputsCount)
         {
+            GlobalEvents.OnNewGameLoopIteration.Invoke();
             var result = ProcessGameLoopOnce();
             processedInputs++;
             bool hasAnyMovement = false;
