@@ -1,5 +1,5 @@
-using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
@@ -16,7 +16,7 @@ public class MainMenu : MonoBehaviour
 
     private void PlayButtonPressed()
     {
-        //StartGame
+        SceneManager.LoadSceneAsync("Scenes/SampleScene");
     }
 
     private void QuitButtonPressed()
