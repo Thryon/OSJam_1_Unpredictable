@@ -52,10 +52,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1780643099111895951, guid: f0a0cafb5f9e6204fb4dce9aaaa379aa, type: 3}
+      propertyPath: connectionID
+      value: 1_Teleporter
+      objectReference: {fileID: 0}
     - target: {fileID: 1882464821542737043, guid: f0a0cafb5f9e6204fb4dce9aaaa379aa, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 44760d0b853849f4ba927f90b413e32a, type: 2}
+    - target: {fileID: 8126596604952566608, guid: f0a0cafb5f9e6204fb4dce9aaaa379aa, type: 3}
+      propertyPath: Type
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8126596604952566608, guid: f0a0cafb5f9e6204fb4dce9aaaa379aa, type: 3}
       propertyPath: positionInGrid.x
       value: 5
@@ -2727,10 +2735,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1780643099111895951, guid: f0a0cafb5f9e6204fb4dce9aaaa379aa, type: 3}
+      propertyPath: connectionID
+      value: 1_Teleporter
+      objectReference: {fileID: 0}
     - target: {fileID: 1882464821542737043, guid: f0a0cafb5f9e6204fb4dce9aaaa379aa, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 44760d0b853849f4ba927f90b413e32a, type: 2}
+    - target: {fileID: 8126596604952566608, guid: f0a0cafb5f9e6204fb4dce9aaaa379aa, type: 3}
+      propertyPath: Type
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8126596604952566608, guid: f0a0cafb5f9e6204fb4dce9aaaa379aa, type: 3}
       propertyPath: positionInGrid.x
       value: 4
@@ -4208,10 +4224,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1780643099111895951, guid: f0a0cafb5f9e6204fb4dce9aaaa379aa, type: 3}
+      propertyPath: connectionID
+      value: 2_Teleporter
+      objectReference: {fileID: 0}
     - target: {fileID: 1882464821542737043, guid: f0a0cafb5f9e6204fb4dce9aaaa379aa, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 44760d0b853849f4ba927f90b413e32a, type: 2}
+    - target: {fileID: 8126596604952566608, guid: f0a0cafb5f9e6204fb4dce9aaaa379aa, type: 3}
+      propertyPath: Type
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8126596604952566608, guid: f0a0cafb5f9e6204fb4dce9aaaa379aa, type: 3}
       propertyPath: positionInGrid.x
       value: 7
@@ -8766,10 +8790,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1780643099111895951, guid: f0a0cafb5f9e6204fb4dce9aaaa379aa, type: 3}
+      propertyPath: connectionID
+      value: 2_Teleporter
+      objectReference: {fileID: 0}
     - target: {fileID: 1882464821542737043, guid: f0a0cafb5f9e6204fb4dce9aaaa379aa, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 44760d0b853849f4ba927f90b413e32a, type: 2}
+    - target: {fileID: 8126596604952566608, guid: f0a0cafb5f9e6204fb4dce9aaaa379aa, type: 3}
+      propertyPath: Type
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8126596604952566608, guid: f0a0cafb5f9e6204fb4dce9aaaa379aa, type: 3}
       propertyPath: positionInGrid.x
       value: 2
