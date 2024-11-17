@@ -172,7 +172,28 @@ public class InputManager : MonoBehaviour
 
         Controls.General.Pause.performed += ctx => OnPause();
     }
-    
+
+    private void OnDestroy()
+    {
+        Controls.Player1.MoveUp.RemoveAllBindingOverrides();
+        Controls.Player1.MoveDown.RemoveAllBindingOverrides();
+        Controls.Player1.MoveLeft.RemoveAllBindingOverrides();
+        Controls.Player1.MoveRight.RemoveAllBindingOverrides();
+        Controls.Player1.ShootUp.RemoveAllBindingOverrides();
+        Controls.Player1.ShootDown.RemoveAllBindingOverrides();
+        Controls.Player1.ShootLeft.RemoveAllBindingOverrides();
+        Controls.Player1.ShootRight.RemoveAllBindingOverrides();
+        
+        Controls.Player2.MoveUp.RemoveAllBindingOverrides();
+        Controls.Player2.MoveDown.RemoveAllBindingOverrides();
+        Controls.Player2.MoveLeft.RemoveAllBindingOverrides();
+        Controls.Player2.MoveRight.RemoveAllBindingOverrides();
+        Controls.Player2.ShootUp.RemoveAllBindingOverrides();
+        Controls.Player2.ShootDown.RemoveAllBindingOverrides();
+        Controls.Player2.ShootLeft.RemoveAllBindingOverrides();
+        Controls.General.Pause.RemoveAllBindingOverrides();
+    }
+
     private void OnPause()
     {
         GameManager.Instance.TogglePause();
