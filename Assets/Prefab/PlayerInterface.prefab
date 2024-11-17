@@ -230,6 +230,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57145200d2b04cf4796e924623967100, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerID: 0
   _inputImageList:
   - {fileID: 6414650849169629947}
   - {fileID: 3659517024519847957}
