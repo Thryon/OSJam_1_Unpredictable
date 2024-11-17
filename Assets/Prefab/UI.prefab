@@ -3397,7 +3397,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8954434733790047398}
         m_TargetAssemblyTypeName: GameUI, Assembly-CSharp
-        m_MethodName: ReloadGame
+        m_MethodName: GoToMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

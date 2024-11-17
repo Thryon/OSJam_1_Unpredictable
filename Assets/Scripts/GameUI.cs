@@ -31,6 +31,7 @@ public class GameUI : MonoBehaviour
         GlobalEvents.OnGameWin.RemoveListener(OnWin);
         GlobalEvents.OnRoundWin.RemoveListener(OnRoundWin);
         GlobalEvents.ResetForNewRound.RemoveListener(ResetForNewRound);
+        GlobalEvents.OnBufferPhaseStarted.RemoveListener(ShowTimer);
     }
 
     private void ResetForNewRound()
@@ -56,6 +57,12 @@ public class GameUI : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         _roundNumber = 1;
+    }
+
+    public void GoToMainMenu()
+    {
+        //Go to main menu
+        SceneManager.LoadScene(0);
     }
 
     private void Update()
@@ -85,12 +92,19 @@ public class GameUI : MonoBehaviour
         _bannerRoundInfo.transform.localScale = Vector3.zero;
         _gameManager = GameManager.Instance;
         GlobalEvents.OnBufferPhaseDone.AddListener(HideTimer);
+        GlobalEvents.OnBufferPhaseStarted.AddListener(ShowTimer);
     }
 
     private void HideTimer()
     {
         _textTimer.GetComponentInParent<Image>()?.DOFade(0f, 0.5f);
         _textTimer.DOFade(0f, 0.5f);
+    }
+
+    private void ShowTimer()
+    {
+        _textTimer.GetComponentInParent<Image>()?.DOFade(1f, 0.5f);
+        _textTimer.DOFade(1f, 0.5f);
     }
 
     private void DisableTutorialText((int, InputManager.EInputType) arg0)
