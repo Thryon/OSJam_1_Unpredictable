@@ -11,9 +11,9 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private Image _imagePreview;
 
     [Header("Level Preview")] 
-    [SerializeField] private Image _previewLvl1;
-    [SerializeField] private Image _previewLvl2;
-    [SerializeField] private Image _previewLvl3;
+    [SerializeField] private Sprite _previewLvl1;
+    [SerializeField] private Sprite _previewLvl2;
+    [SerializeField] private Sprite _previewLvl3;
 
     [Header("SceneSelected")] 
     [SerializeField] private int _buildIndexFirstLevel;
@@ -26,11 +26,12 @@ public class MainMenu : MonoBehaviour
     {
         _playButton.onClick.AddListener(PlayButtonPressed);
         _quitButton.onClick.AddListener(QuitButtonPressed);
+        SliderChangeLevelPreview(0);
     }
 
     private void PlayButtonPressed()
     {
-        SceneManager.LoadSceneAsync("Scenes/SampleScene");
+        SceneManager.LoadSceneAsync(_indexOfPlaySceneSelected);
     }
 
     private void QuitButtonPressed()
@@ -43,15 +44,15 @@ public class MainMenu : MonoBehaviour
         switch (index)
         {
             case 0:
-                _imagePreview = _previewLvl1;
+                _imagePreview.sprite = _previewLvl1;
                 _indexOfPlaySceneSelected = _buildIndexFirstLevel;
                 break;
             case 1:
-                _imagePreview = _previewLvl2;
+                _imagePreview.sprite = _previewLvl2;
                 _indexOfPlaySceneSelected = _buildIndexSecondLevel;
                 break;
             case 2:
-                _imagePreview = _previewLvl3;
+                _imagePreview.sprite = _previewLvl3;
                 _indexOfPlaySceneSelected = _buildIndexThirdLevel;
                 break;
         }

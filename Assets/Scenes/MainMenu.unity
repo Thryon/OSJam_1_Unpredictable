@@ -383,9 +383,9 @@ MonoBehaviour:
   _playButton: {fileID: 2068111434}
   _quitButton: {fileID: 2068111433}
   _imagePreview: {fileID: 2068111435}
-  _previewLvl1: {fileID: 0}
-  _previewLvl2: {fileID: 0}
-  _previewLvl3: {fileID: 0}
+  _previewLvl1: {fileID: 21300000, guid: cc461786db6df294188f286178e85fba, type: 3}
+  _previewLvl2: {fileID: 21300000, guid: 06bddbe59ec9418428e850c2ee02c4c3, type: 3}
+  _previewLvl3: {fileID: 21300000, guid: 9e5eea7a4c8a1ab469cca47a6adf8c24, type: 3}
   _buildIndexFirstLevel: 1
   _buildIndexSecondLevel: 2
   _buildIndexThirdLevel: 3
