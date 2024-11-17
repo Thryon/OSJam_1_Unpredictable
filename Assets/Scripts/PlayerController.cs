@@ -15,10 +15,10 @@ public class PlayerController : MonoBehaviour
 
     public Animator animator;
 
-    public void MoveTo(Vector3 transformPosition, float f)
+    public void MoveTo(Vector3 transformPosition, Vector3 lookAtDirection, float duraiton)
     {
         transform.LookAt(transformPosition);
-        transform.DOMove(transformPosition , 0.5f).SetEase(Ease.Linear);
+        transform.DOMove(transformPosition , duraiton).SetEase(Ease.Linear);
         animator.SetTrigger("Walk");
     }
 

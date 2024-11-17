@@ -358,15 +358,19 @@ public class GameManager : MonoBehaviour
             if (result.player1Actions.Contains(EAction.Move))
             {
                 hasAnyMovement = true;
-                IngameCell player1cell = GridManager.Instance.IngameGrid.GetCellAtPos(result.Player1MoveResult.toPosition);
-                player1.MoveTo(player1cell.transform.position, 0.5f);
+                IngameCell player1Cell = GridManager.Instance.IngameGrid.GetCellAtPos(result.Player1MoveResult.toPosition);
+                Vector3 moveToPosition = result.Player1MoveResult.hitObstacle ? player1.transform.position : player1Cell.transform.position;
+                Vector3 lookAt =  moveToPosition + new Vector3(result.Player1MoveResult.direction.x, 0f, result.Player1MoveResult.direction.y);
+                player1.MoveTo(moveToPosition, lookAt, playerMoveDuration);
             }
             
             if (result.player2Actions.Contains(EAction.Move))
             {
                 hasAnyMovement = true;
-                IngameCell player2cell = GridManager.Instance.IngameGrid.GetCellAtPos(result.Player2MoveResult.toPosition);
-                player2.MoveTo(player2cell.transform.position , 0.5f);
+                IngameCell player2Cell = GridManager.Instance.IngameGrid.GetCellAtPos(result.Player2MoveResult.toPosition);
+                Vector3 moveToPosition = result.Player2MoveResult.hitObstacle ? player2.transform.position : player2Cell.transform.position;
+                Vector3 lookAt =  moveToPosition + new Vector3(result.Player2MoveResult.direction.x, 0f, result.Player2MoveResult.direction.y);
+                player2.MoveTo(moveToPosition, lookAt, playerMoveDuration);
             }
 
             if (hasAnyMovement)
