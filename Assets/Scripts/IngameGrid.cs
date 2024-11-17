@@ -145,7 +145,7 @@ public class IngameGrid : MonoBehaviour
 
     private IngameCell SpawnCell(int x, int y)
     {
-        IngameCell cell = (IngameCell)Instantiate(_ingameCellPrefab, transform);
+        IngameCell cell = (IngameCell)PrefabUtility.InstantiatePrefab(_ingameCellPrefab, transform);
         cell.transform.localPosition = new Vector3(x * cellsDistance, 0f, y * cellsDistance);
         cell.SetPositionInGrid(x, y);
         cell.name = "Cell_" + x + "_" + y;
