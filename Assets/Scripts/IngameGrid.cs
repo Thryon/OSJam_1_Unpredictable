@@ -18,6 +18,7 @@ public class IngameGrid : MonoBehaviour
     [SerializeField] private Material _oddGroundMat;
     [SerializeField] private bool _applyMats;
     [SerializeField] private bool _reaffectCellPositions;
+    [SerializeField] private bool _switchCellPrefabs;
     public List<IngameCell> cells = new List<IngameCell>();
     public Vector2Int Size => gridSize;
     public Vector2Int Player1SpawnPosition => player1SpawnPosition;
@@ -58,6 +59,25 @@ public class IngameGrid : MonoBehaviour
                         EditorUtility.SetDirty(cell);
                     }
                 } 
+            }
+
+            if (_switchCellPrefabs)
+            {
+                _switchCellPrefabs = false;
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    for (int x = 0; x < gridSize.x; x++)
+                    {
+                        var cell = cells[x + (y * gridSize.x)];
+                        var newCell = SpawnCell(x, y);
+                        newCell.Type = cell.Type;
+                        newCell.transform.SetSiblingIndex(cell.transform.GetSiblingIndex());
+                        cells[x + (y * gridSize.x)] = newCell;
+                        Undo.DestroyObjectImmediate(cell.gameObject);
+                        EditorUtility.SetDirty(newCell);
+                    }
+                } 
+                EditorUtility.SetDirty(this);
             }
         }
         #endif
